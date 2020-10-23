@@ -32,3 +32,11 @@ address{
     background-color: #512DA8;
 }
 
+.Title{
+     font-weight: bold;
+     text-align: center;
+}
+.row{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
