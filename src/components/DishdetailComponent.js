@@ -23,8 +23,7 @@ class CommentForm extends Component{
       }
       handleSubmit(values) {
         this.toggleModal();
-        console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
     render(){
         const required = (val) => val && val.length;
@@ -34,7 +33,7 @@ class CommentForm extends Component{
         return(
             
             <div>
-                <Button outline onClick={this.toggleModal}><span className="fa fa-edit fa-lg"></span> Submit Comment</Button>
+                <Button outline onClick={this.toggleModal}><span className="fa fa-edit fa-lg" /> Submit Comment</Button>
             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
@@ -67,7 +66,7 @@ class CommentForm extends Component{
                             <Row className="form-group">
                                 <Label htmlFor="yourname" md={12}>First Name</Label>
                                 <Col md={12}>
-                                    <Control.text model=".yourname" id="yourname" name="yourname"
+                                    <Control.text model=".author" id="author" name="author"
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
@@ -109,7 +108,7 @@ class CommentForm extends Component{
                             </Row>
                             <Row className="form-group">
                                 <Col md={{size:10}}>
-                                    <Button type="submit" color="primary">
+                                    <Button type="submit" value="Submit" color="primary">
                                     Submit
                                     </Button>
                                 </Col>
@@ -139,12 +138,16 @@ function RenderDish({dish}){
             return(
                 <div></div>);
 }
-function RenderComments({Comments}){
-    if(Comments!=null){
-        const commentlist=Comments.map((entry)=>
+function RenderComments({comments, addComment, dishId}){
+    if(comments!=null){
+        const commentlist=comments.map((entry)=>
         <li key={entry.id}>
            <br /> {entry.comment}<br />
-            --{entry.author}, {entry.date}<br />
+            --{entry.author}, {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit"
+              }).format(new Date(Date.parse(entry.date)))}<br />
         </li>
         );
     return(
@@ -153,7 +156,7 @@ function RenderComments({Comments}){
         <ul className="list-unstyled">
         {commentlist}
         </ul>
-        <CommentForm />
+        <CommentForm dishId={dishId} addComment={addComment} />
         </div>
     );}
     else
@@ -181,7 +184,10 @@ const DishDetail=(props)=>{
             <RenderDish dish={item} />
         </div>
         <div className="col-12 col-md-5 m-1">
-            <br /><RenderComments Comments={props.comments} />
+            <br /> <RenderComments comments={props.comments}
+        addComment={props.addComment}
+        dishId={props.dish.id}
+      />
         </div>
     </div>
     </div>);}
