@@ -5,6 +5,7 @@ import { Card, CardImg, CardText, CardBody,
 import { Link } from 'react-router-dom';
 import '../App.css';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 class CommentForm extends Component{
     constructor(props) {
@@ -128,7 +129,7 @@ function RenderDish({dish}){
     if (dish != null)
             return(
                 <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
+                    <CardImg top src={baseUrl+ dish.image} alt={dish.name} />
                     <CardBody>
                       <CardTitle className="Title">{dish.name}</CardTitle>
                       <CardText>{dish.description}</CardText>
@@ -164,7 +165,7 @@ function RenderComments({comments, addComment, dishId}){
     return(<div></div>);
 }
 const DishDetail=(props)=>{
-    const item=props.dish;
+    
     if (props.isLoading) {
         return(
             <div className="container">
@@ -199,7 +200,7 @@ const DishDetail=(props)=>{
                 </div>
     <div className="row">
         <div  className="col-12 col-md-5 m-1">
-            <RenderDish dish={item} />
+            <RenderDish dish={props.dish} />
         </div>
         <div className="col-12 col-md-5 m-1">
             <br /> <RenderComments comments={props.comments}
